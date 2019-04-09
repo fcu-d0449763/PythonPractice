@@ -45,4 +45,5 @@ while 1:
         [pokemonformat(k,v) for (k, v) in pokemon.items() if v[4]==attrcho]
     elif choice =='7':
         break
-        
+    else:
+        print("無此選項")
