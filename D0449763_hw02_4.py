@@ -1,69 +1,48 @@
-#HW02_5
-import requests
-import json
-from pprint import pprint
-headers = {
-    'accept': 'application/json',
+#HW02_4
+pokemon = {
+    '1':('皮卡丘',0.4,6.0,'靜電','雄','電'),
+    '2':('伊布',0.3,6.5,'適應力','雌','一般'),
+    '3':('六尾',0.6,9.9,'引火','雌','火'),
+    '4':('九尾',1.1,19.9,'引火','雌','火'),
+    '5':('菊草葉',0.9,6.4,'茂盛','雄','草'),
+    '6':('噴火龍',1.7,90.5,'猛火','雄','火'),
+    '7':('傑尼龜',0.5,9.0,'激流','雄','水'),
+    '8':('木守宮',0.5,5.0,'茂盛','雄','草'),
+    '9':('小火龍',0.6,8.5,'猛火','雄','火')
 }
 
-params = (
-    ('Year', '105'),
-    ('Month', '01'),
-)
+def pokemonformat(k,v):
+    print("編號:{}\t名稱:{:^3s}\t身高:{}m\t體重:{}kg\t特性:{}\t性別:{}\t分類:{}\t".format(k,*v,space=chr(12288)))
 
-response = requests.get('http://datacenter.taichung.gov.tw/swagger/OpenData/fd55cb14-e526-4658-8a6b-045ab582a025', headers=headers, params=params)
-res = json.loads(response.text)
-
-
-
-dist ={}
-vil = set()
-
-
-for i in res:
-    if i["區別"] not in dist:
-        dist[i["區別"]]={"里別":[i["里別"]]}
-        if i["性別"] == '計':
-            dist[i["區別"]].update({"總計遷入":i["總計遷入"]})
-            dist[i["區別"]].update({"總計遷出":i["總計遷出"]})
-            dist[i["區別"]].update({"國內戶籍遷徙(含其他)_遷入":i["國內戶籍遷徙(含其他)_遷入"]})
-            dist[i["區別"]].update({"國內戶籍遷徙(含其他)_遷出":i["國內戶籍遷徙(含其他)_遷出"]})
-            dist[i["區別"]].update({"國際戶籍遷徙_遷入":i["國際戶籍遷徙_遷入"]})
-            dist[i["區別"]].update({"國際戶籍遷徙_遷出":i["國際戶籍遷徙_遷出"]})
-    elif i["里別"] not in  dist[i["區別"]]["里別"]:
-        dist[i["區別"]]["里別"].append(i["里別"])
-        if i["性別"] == '計':
-            dist[i["區別"]]["總計遷入"] += i["總計遷入"]
-            dist[i["區別"]]["總計遷出"] += i["總計遷出"]
-            dist[i["區別"]]["國內戶籍遷徙(含其他)_遷入"] += i["國內戶籍遷徙(含其他)_遷入"]
-            dist[i["區別"]]["國內戶籍遷徙(含其他)_遷出"] += i["國內戶籍遷徙(含其他)_遷出"]
-            dist[i["區別"]]["國際戶籍遷徙_遷入"] += i["國際戶籍遷徙_遷入"]
-            dist[i["區別"]]["國際戶籍遷徙_遷出"] += i["國際戶籍遷徙_遷出"]
-
-print("分析總計遷入數前三區")
-for x, v in sorted(dist.items(), key=lambda x: x[1]["總計遷入"], reverse=True)[:3]:
-    print(x,"總計遷入:",v["總計遷入"])
-
-print("\n分析總計遷出數前三區")
-for x, v in sorted(dist.items(), key=lambda x: x[1]["總計遷出"], reverse=True)[:3]:
-    print(x,"總計遷出:",v["總計遷出"])
-
-print("\n分析國內戶籍遷徙(含其他)_遷入前三區")
-for x, v in sorted(dist.items(), key=lambda x: x[1]["國內戶籍遷徙(含其他)_遷入"], reverse=True)[:3]:
-    print(x,"國內戶籍遷徙(含其他)_遷入:",v["國內戶籍遷徙(含其他)_遷入"])
-    
-print("\n分析國內戶籍遷徙(含其他)_遷出前三區")
-for x, v in sorted(dist.items(), key=lambda x: x[1]["國內戶籍遷徙(含其他)_遷出"], reverse=True)[:3]:
-    print(x,"國內戶籍遷徙(含其他)_遷出",v["國內戶籍遷徙(含其他)_遷出"])
-    
-print("\n分析國際戶籍遷徙_遷入前三區")
-for x, v in sorted(dist.items(), key=lambda x: x[1]["國際戶籍遷徙_遷入"], reverse=True)[:3]:
-    print(x,"國際戶籍遷徙_遷入:",v["國際戶籍遷徙_遷入"])
-    
-print("\n分析國際戶籍遷徙_遷出前三區")
-for x, v in sorted(dist.items(), key=lambda x: x[1]["國際戶籍遷徙_遷出"], reverse=True)[:3]:
-    print(x,"國際戶籍遷徙_遷出:",v["國際戶籍遷徙_遷出"])
-    
-print("\n分析里數前三區")
-for x, v in sorted(dist.items(), key=lambda x: len(x[1]["里別"]), reverse=True)[:3]:
-    print(x,"里數:",len(v["里別"]))
+while 1:
+    choice = input("請輸入選項(1)列出目前神奇寶貝資料(2)依據身高排列(3)依據體重排列(4)找分類(5)找特性(6)找性別(7)離開：")
+    if choice =='1':
+        [pokemonformat(k,v) for (k, v) in pokemon.items()]
+    elif choice =='2':
+        [pokemonformat(k,v) for (k, v) in sorted(pokemon.items(), key=lambda x: x[1][1], reverse=True)]
+    elif choice =='3':
+        [pokemonformat(k,v) for (k, v) in sorted(pokemon.items(), key=lambda x: x[1][2], reverse=True)]
+    elif choice =='4':
+        attr = set()
+        for k,v in pokemon.items():
+            attr.add(v[5]) 
+        print("目前分類列表為："+", ".join(str(e) for e in attr ))
+        attrcho = input("請選擇要查詢的分類")
+        [pokemonformat(k,v) for (k, v) in pokemon.items() if v[5]==attrcho]
+    elif choice =='5':
+        attr = set()
+        for k,v in pokemon.items():
+            attr.add(v[3]) 
+        print("目前特性有：："+", ".join(str(e) for e in attr ))
+        attrcho = input("請選擇要查詢的特性：")
+        [pokemonformat(k,v) for (k, v) in pokemon.items() if v[3]==attrcho]
+    elif choice =='6':
+        attr = set()
+        for k,v in pokemon.items():
+            attr.add(v[4]) 
+        print("目前性別有："+", ".join(str(e) for e in attr ))
+        attrcho = input("請選擇要查詢的性別：")
+        [pokemonformat(k,v) for (k, v) in pokemon.items() if v[4]==attrcho]
+    elif choice =='7':
+        break
+        
